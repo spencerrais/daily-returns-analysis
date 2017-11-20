@@ -176,17 +176,54 @@ $(document).ready(function () {
 <p>The first thing to be done is to import the data and ensure it comes in currectly.</p>
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxucmV0dXJucyA9IHJlYWQudGFibGUoXCJSZXR1cm5zMjUwZC50eHRcIixoZWFkZXIgPSBUUlVFKVxucmV0dXJucyRibGFuayA8LSBOVUxMICNlcmFzZSB0aGUgZmlyc3QgY29sdW1uLCB3aGljaCBpcyB1bm5lY2Vzc2FyeVxucmV0dXJucygyNTEpXG5gYGAifQ== -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxucmV0dXJucyA9IHJlYWQudGFibGUoXCJSZXR1cm5zMjUwZC50eHRcIixoZWFkZXIgPSBUUlVFKVxucmV0dXJucyRibGFuayA8LSBOVUxMICNlcmFzZSB0aGUgZmlyc3QgY29sdW1uLCB3aGljaCBpcyB1bm5lY2Vzc2FyeVxuYGBgIn0= -->
 <pre class="r"><code>returns = read.table(&quot;Returns250d.txt&quot;,header = TRUE)
-returns$blank &lt;- NULL #erase the first column, which is unnecessary
-returns(251)</code></pre>
+returns$blank &lt;- NULL #erase the first column, which is unnecessary</code></pre>
 <!-- rnb-source-end -->
-<!-- rnb-output-begin eyJkYXRhIjoiRXJyb3IgaW4gcmV0dXJucygyNTEpIDogY291bGQgbm90IGZpbmQgZnVuY3Rpb24gXCJyZXR1cm5zXCJcbiJ9 -->
-<pre><code>Error in returns(251) : could not find function &quot;returns&quot;</code></pre>
-<!-- rnb-output-end -->
 <!-- rnb-chunk-end -->
 <!-- rnb-text-begin -->
-<p>The time series is plotted to give a general feeling of the data. When looking at the data there are a lot of N/A which seems to mean that the company was not being traded at that moment yet.</p>
+<p>The time series is plotted to give a general feeling of the data. When looking at the data there are a lot of N/A which seems to mean that the company was not being traded at that moment yet. When looking at the data it is not obvious at which</p>
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuI2xvb2tpbmcgYXQgYWRkaW5nIHRoZSBkYXRlcyBhcyBhbiBleHRyYSBjb2x1bW4sIGZpbmQgYSB3YXkgdG8gc2tpcCB0aGUgd2Vla2VuZHNcbiN2YWx1ZXMgPSBzZXEoZnJvbSA9IGFzLkRhdGUoXCIxOTg4LTAxLTA0XCIpLCB0byA9IGFzLkRhdGUoXCIyMDA3LTEyLTI0XCIpLCBieSA9ICdkYXknKVxuI21lcmdlKHZhbHVlcyxyZXR1cm5zLCBhbGwgPSBUKVxucmVxdWlyZSh0aW1lRGF0ZSlcbiMgQSDigJl0aW1lRGF0ZeKAmSBTZXF1ZW5jZVxudFMgPC0gdGltZVNlcXVlbmNlKGFzLkRhdGUoXCIxOTg4LzEvNFwiKSwgYXMuRGF0ZShcIjIwMDcvMTIvMjRcIikpXG4jIFN1YnNldCB3ZWVrZGF5c1xudFcgPC0gdFNbaXNXZWVrZGF5KHRTKV07IHRXXG5gYGAifQ== -->
+<pre class="r"><code>#looking at adding the dates as an extra column, find a way to skip the weekends
+#values = seq(from = as.Date(&quot;1988-01-04&quot;), to = as.Date(&quot;2007-12-24&quot;), by = 'day')
+#merge(values,returns, all = T)
+require(timeDate)
+# A ’timeDate’ Sequence
+tS &lt;- timeSequence(as.Date(&quot;1988/1/4&quot;), as.Date(&quot;2007/12/24&quot;))
+# Subset weekdays
+tW &lt;- tS[isWeekday(tS)]; tW</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-output-begin eyJkYXRhIjoiR01UXG4gIFsxXSBbMTk4OC0wMS0wNF0gWzE5ODgtMDEtMDVdIFsxOTg4LTAxLTA2XSBbMTk4OC0wMS0wN10gWzE5ODgtMDEtMDhdIFsxOTg4LTAxLTExXSBbMTk4OC0wMS0xMl0gWzE5ODgtMDEtMTNdXG4gIFs5XSBbMTk4OC0wMS0xNF0gWzE5ODgtMDEtMTVdIFsxOTg4LTAxLTE4XSBbMTk4OC0wMS0xOV0gWzE5ODgtMDEtMjBdIFsxOTg4LTAxLTIxXSBbMTk4OC0wMS0yMl0gWzE5ODgtMDEtMjVdXG4gWzE3XSBbMTk4OC0wMS0yNl0gWzE5ODgtMDEtMjddIFsxOTg4LTAxLTI4XSBbMTk4OC0wMS0yOV0gWzE5ODgtMDItMDFdIFsxOTg4LTAyLTAyXSBbMTk4OC0wMi0wM10gWzE5ODgtMDItMDRdXG4gWzI1XSBbMTk4OC0wMi0wNV0gWzE5ODgtMDItMDhdIFsxOTg4LTAyLTA5XSBbMTk4OC0wMi0xMF0gWzE5ODgtMDItMTFdIFsxOTg4LTAyLTEyXSBbMTk4OC0wMi0xNV0gWzE5ODgtMDItMTZdXG4gWzMzXSBbMTk4OC0wMi0xN10gWzE5ODgtMDItMThdIFsxOTg4LTAyLTE5XSBbMTk4OC0wMi0yMl0gWzE5ODgtMDItMjNdIFsxOTg4LTAyLTI0XSBbMTk4OC0wMi0yNV0gWzE5ODgtMDItMjZdXG4gWzQxXSBbMTk4OC0wMi0yOV0gWzE5ODgtMDMtMDFdIFsxOTg4LTAzLTAyXSBbMTk4OC0wMy0wM10gWzE5ODgtMDMtMDRdIFsxOTg4LTAzLTA3XSBbMTk4OC0wMy0wOF0gWzE5ODgtMDMtMDldXG4gWzQ5XSBbMTk4OC0wMy0xMF0gWzE5ODgtMDMtMTFdIFsxOTg4LTAzLTE0XSBbMTk4OC0wMy0xNV0gWzE5ODgtMDMtMTZdIFsxOTg4LTAzLTE3XSBbMTk4OC0wMy0xOF0gWzE5ODgtMDMtMjFdXG4gWzU3XSBbMTk4OC0wMy0yMl0gWzE5ODgtMDMtMjNdIFsxOTg4LTAzLTI0XSBbMTk4OC0wMy0yNV0gWzE5ODgtMDMtMjhdIFsxOTg4LTAzLTI5XSBbMTk4OC0wMy0zMF0gWzE5ODgtMDMtMzFdXG4gWzY1XSBbMTk4OC0wNC0wMV0gWzE5ODgtMDQtMDRdIFsxOTg4LTA0LTA1XSBbMTk4OC0wNC0wNl0gWzE5ODgtMDQtMDddIFsxOTg4LTA0LTA4XSBbMTk4OC0wNC0xMV0gWzE5ODgtMDQtMTJdXG4gWzczXSBbMTk4OC0wNC0xM10gWzE5ODgtMDQtMTRdIFsxOTg4LTA0LTE1XSBbMTk4OC0wNC0xOF0gWzE5ODgtMDQtMTldIFsxOTg4LTA0LTIwXSBbMTk4OC0wNC0yMV0gWzE5ODgtMDQtMjJdXG4gWzgxXSBbMTk4OC0wNC0yNV0gWzE5ODgtMDQtMjZdIFsxOTg4LTA0LTI3XSBbMTk4OC0wNC0yOF0gWzE5ODgtMDQtMjldIFsxOTg4LTA1LTAyXSBbMTk4OC0wNS0wM10gWzE5ODgtMDUtMDRdXG4gWzg5XSBbMTk4OC0wNS0wNV0gWzE5ODgtMDUtMDZdIFsxOTg4LTA1LTA5XSBbMTk4OC0wNS0xMF0gWzE5ODgtMDUtMTFdIFsxOTg4LTA1LTEyXSBbMTk4OC0wNS0xM10gWzE5ODgtMDUtMTZdXG4gWzk3XSBbMTk4OC0wNS0xN10gWzE5ODgtMDUtMThdIFsxOTg4LTA1LTE5XSBbMTk4OC0wNS0yMF1cbi4uLlxuIFsgcmVhY2hlZCBnZXRSbWV0cmljc09wdGlvbignbWF4LnByaW50JykgfCBnZXRPcHRpb24oJ21heC5wcmludCcpIC0tIG9taXR0ZWQgNTExMSByb3dzIF1dXG4ifQ== -->
+<pre><code>GMT
+  [1] [1988-01-04] [1988-01-05] [1988-01-06] [1988-01-07] [1988-01-08] [1988-01-11] [1988-01-12] [1988-01-13]
+  [9] [1988-01-14] [1988-01-15] [1988-01-18] [1988-01-19] [1988-01-20] [1988-01-21] [1988-01-22] [1988-01-25]
+ [17] [1988-01-26] [1988-01-27] [1988-01-28] [1988-01-29] [1988-02-01] [1988-02-02] [1988-02-03] [1988-02-04]
+ [25] [1988-02-05] [1988-02-08] [1988-02-09] [1988-02-10] [1988-02-11] [1988-02-12] [1988-02-15] [1988-02-16]
+ [33] [1988-02-17] [1988-02-18] [1988-02-19] [1988-02-22] [1988-02-23] [1988-02-24] [1988-02-25] [1988-02-26]
+ [41] [1988-02-29] [1988-03-01] [1988-03-02] [1988-03-03] [1988-03-04] [1988-03-07] [1988-03-08] [1988-03-09]
+ [49] [1988-03-10] [1988-03-11] [1988-03-14] [1988-03-15] [1988-03-16] [1988-03-17] [1988-03-18] [1988-03-21]
+ [57] [1988-03-22] [1988-03-23] [1988-03-24] [1988-03-25] [1988-03-28] [1988-03-29] [1988-03-30] [1988-03-31]
+ [65] [1988-04-01] [1988-04-04] [1988-04-05] [1988-04-06] [1988-04-07] [1988-04-08] [1988-04-11] [1988-04-12]
+ [73] [1988-04-13] [1988-04-14] [1988-04-15] [1988-04-18] [1988-04-19] [1988-04-20] [1988-04-21] [1988-04-22]
+ [81] [1988-04-25] [1988-04-26] [1988-04-27] [1988-04-28] [1988-04-29] [1988-05-02] [1988-05-03] [1988-05-04]
+ [89] [1988-05-05] [1988-05-06] [1988-05-09] [1988-05-10] [1988-05-11] [1988-05-12] [1988-05-13] [1988-05-16]
+ [97] [1988-05-17] [1988-05-18] [1988-05-19] [1988-05-20]
+...
+ [ reached getRmetricsOption('max.print') | getOption('max.print') -- omitted 5111 rows ]]</code></pre>
+<!-- rnb-output-end -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxubGVuZ3RoKHRXKVxuYGBgIn0= -->
+<pre class="r"><code>length(tW)</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-output-begin eyJkYXRhIjoiWzFdIDUyMTFcbiJ9 -->
+<pre><code>[1] 5211</code></pre>
+<!-- rnb-output-end -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuI3RoZSBhYm92ZSB1bmZvcnR1bmF0ZWx5IGRvZXMgbm90IHdvcmsuLi53aGljaCBhcmUgdGhlIGRheXMgdGhpcyBpcyBjb3VudGVkIGZvcj8gSSBjb3VudGVkIGZvciBhbGwgd2Vla3Mgc3RhcnRpbmcgZnJvbSB0aGUgYmVnaW5uaW5nIGFuZCBoYXZlIDUyMTEgdmFsdWVzIGFzIGNvbXBhcmVkIHRvIDUwMzlcbmBgYCJ9 -->
+<pre class="r"><code>#the above unfortunately does not work...which are the days this is counted for? I counted for all weeks starting from the beginning and have 5211 values as compared to 5039</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
 <!-- rnb-chunk-end -->
@@ -195,7 +232,7 @@ returns(251)</code></pre>
 <p>When you save the notebook, an HTML file containing the code and output will be saved alongside it (click the <em>Preview</em> button or press <em>Ctrl+Shift+K</em> to preview the HTML file).</p>
 <!-- rnb-text-end -->
 
-<div id="rmd-source-code">LS0tCnRpdGxlOiAiRGFpbHkgQXNzZXQgUmV0dXJucyBBbmFseXNpczogRXhwbG9yaW5nIHRoZSBEYXRhIgpvdXRwdXQ6IGh0bWxfbm90ZWJvb2sKLS0tClRoZSBmaXJzdCB0aGluZyB0byBiZSBkb25lIGlzIHRvIGltcG9ydCB0aGUgZGF0YSBhbmQgZW5zdXJlIGl0IGNvbWVzIGluIGN1cnJlY3RseS4KCmBgYHtyfQpyZXR1cm5zID0gcmVhZC50YWJsZSgiUmV0dXJuczI1MGQudHh0IixoZWFkZXIgPSBUUlVFKQpyZXR1cm5zJGJsYW5rIDwtIE5VTEwgI2VyYXNlIHRoZSBmaXJzdCBjb2x1bW4sIHdoaWNoIGlzIHVubmVjZXNzYXJ5CmBgYAoKVGhlIHRpbWUgc2VyaWVzIGlzIHBsb3R0ZWQgdG8gZ2l2ZSBhIGdlbmVyYWwgZmVlbGluZyBvZiB0aGUgZGF0YS4gV2hlbiBsb29raW5nIGF0IHRoZSBkYXRhIHRoZXJlIGFyZSBhIGxvdCBvZiBOL0Egd2hpY2ggc2VlbXMgdG8gbWVhbiB0aGF0IHRoZSBjb21wYW55IHdhcyBub3QgYmVpbmcgdHJhZGVkIGF0IHRoYXQgbW9tZW50IHlldC4KCmBgYHtyfQoKCmBgYAoKCkFkZCBhIG5ldyBjaHVuayBieSBjbGlja2luZyB0aGUgKkluc2VydCBDaHVuayogYnV0dG9uIG9uIHRoZSB0b29sYmFyIG9yIGJ5IHByZXNzaW5nICpDdHJsK0FsdCtJKi4KCgpXaGVuIHlvdSBzYXZlIHRoZSBub3RlYm9vaywgYW4gSFRNTCBmaWxlIGNvbnRhaW5pbmcgdGhlIGNvZGUgYW5kIG91dHB1dCB3aWxsIGJlIHNhdmVkIGFsb25nc2lkZSBpdCAoY2xpY2sgdGhlICpQcmV2aWV3KiBidXR0b24gb3IgcHJlc3MgKkN0cmwrU2hpZnQrSyogdG8gcHJldmlldyB0aGUgSFRNTCBmaWxlKS4K</div>
+<div id="rmd-source-code">LS0tCnRpdGxlOiAiRGFpbHkgQXNzZXQgUmV0dXJucyBBbmFseXNpczogRXhwbG9yaW5nIHRoZSBEYXRhIgpvdXRwdXQ6IGh0bWxfbm90ZWJvb2sKLS0tClRoZSBmaXJzdCB0aGluZyB0byBiZSBkb25lIGlzIHRvIGltcG9ydCB0aGUgZGF0YSBhbmQgZW5zdXJlIGl0IGNvbWVzIGluIGN1cnJlY3RseS4KCmBgYHtyfQpyZXR1cm5zID0gcmVhZC50YWJsZSgiUmV0dXJuczI1MGQudHh0IixoZWFkZXIgPSBUUlVFKQpyZXR1cm5zJGJsYW5rIDwtIE5VTEwgI2VyYXNlIHRoZSBmaXJzdCBjb2x1bW4sIHdoaWNoIGlzIHVubmVjZXNzYXJ5CmBgYAoKVGhlIHRpbWUgc2VyaWVzIGlzIHBsb3R0ZWQgdG8gZ2l2ZSBhIGdlbmVyYWwgZmVlbGluZyBvZiB0aGUgZGF0YS4gV2hlbiBsb29raW5nIGF0IHRoZSBkYXRhIHRoZXJlIGFyZSBhIGxvdCBvZiBOL0Egd2hpY2ggc2VlbXMgdG8gbWVhbiB0aGF0IHRoZSBjb21wYW55IHdhcyBub3QgYmVpbmcgdHJhZGVkIGF0IHRoYXQgbW9tZW50IHlldC4gV2hlbiBsb29raW5nIGF0IHRoZSBkYXRhIGl0IGlzIG5vdCBvYnZpb3VzIGF0IHdoaWNoCgpgYGB7cn0KI2xvb2tpbmcgYXQgYWRkaW5nIHRoZSBkYXRlcyBhcyBhbiBleHRyYSBjb2x1bW4sIGZpbmQgYSB3YXkgdG8gc2tpcCB0aGUgd2Vla2VuZHMKI3ZhbHVlcyA9IHNlcShmcm9tID0gYXMuRGF0ZSgiMTk4OC0wMS0wNCIpLCB0byA9IGFzLkRhdGUoIjIwMDctMTItMjQiKSwgYnkgPSAnZGF5JykKI21lcmdlKHZhbHVlcyxyZXR1cm5zLCBhbGwgPSBUKQpyZXF1aXJlKHRpbWVEYXRlKQoKIyBBIOKAmXRpbWVEYXRl4oCZIFNlcXVlbmNlCnRTIDwtIHRpbWVTZXF1ZW5jZShhcy5EYXRlKCIxOTg4LzEvNCIpLCBhcy5EYXRlKCIyMDA3LzEyLzI0IikpCgojIFN1YnNldCB3ZWVrZGF5cwp0VyA8LSB0U1tpc1dlZWtkYXkodFMpXTsgdFcKbGVuZ3RoKHRXKQojdGhlIGFib3ZlIHVuZm9ydHVuYXRlbHkgZG9lcyBub3Qgd29yay4uLndoaWNoIGFyZSB0aGUgZGF5cyB0aGlzIGRhdGEgaXMgY291bnRlZCBmb3I/IEkgY291bnRlZCBmb3IgYWxsIHdlZWtzIHN0YXJ0aW5nIGZyb20gdGhlIGJlZ2lubmluZyBhbmQgaGF2ZSA1MjExIHZhbHVlcyBhcyBjb21wYXJlZCB0byA1MDM5CmBgYAoKYGBge3J9CgpgYGAKCkFkZCBhIG5ldyBjaHVuayBieSBjbGlja2luZyB0aGUgKkluc2VydCBDaHVuayogYnV0dG9uIG9uIHRoZSB0b29sYmFyIG9yIGJ5IHByZXNzaW5nICpDdHJsK0FsdCtJKi4KCgpXaGVuIHlvdSBzYXZlIHRoZSBub3RlYm9vaywgYW4gSFRNTCBmaWxlIGNvbnRhaW5pbmcgdGhlIGNvZGUgYW5kIG91dHB1dCB3aWxsIGJlIHNhdmVkIGFsb25nc2lkZSBpdCAoY2xpY2sgdGhlICpQcmV2aWV3KiBidXR0b24gb3IgcHJlc3MgKkN0cmwrU2hpZnQrSyogdG8gcHJldmlldyB0aGUgSFRNTCBmaWxlKS4K</div>
 
 
 

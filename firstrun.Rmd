@@ -9,13 +9,26 @@ returns = read.table("Returns250d.txt",header = TRUE)
 returns$blank <- NULL #erase the first column, which is unnecessary
 ```
 
-The time series is plotted to give a general feeling of the data. When looking at the data there are a lot of N/A which seems to mean that the company was not being traded at that moment yet.
+The time series is plotted to give a general feeling of the data. When looking at the data there are a lot of N/A which seems to mean that the company was not being traded at that moment yet. When looking at the data it is not obvious at which
+
+```{r}
+#looking at adding the dates as an extra column, find a way to skip the weekends
+#values = seq(from = as.Date("1988-01-04"), to = as.Date("2007-12-24"), by = 'day')
+#merge(values,returns, all = T)
+require(timeDate)
+
+# A ’timeDate’ Sequence
+tS <- timeSequence(as.Date("1988/1/4"), as.Date("2007/12/24"))
+
+# Subset weekdays
+tW <- tS[isWeekday(tS)]; tW
+length(tW)
+#the above unfortunately does not work...which are the days this data is counted for? I counted for all weeks starting from the beginning and have 5211 values as compared to 5039
+```
 
 ```{r}
 
-
 ```
-
 
 Add a new chunk by clicking the *Insert Chunk* button on the toolbar or by pressing *Ctrl+Alt+I*.
 
