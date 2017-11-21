@@ -9,7 +9,9 @@ returns = read.table("Returns250d.txt",header = TRUE)
 returns$blank <- NULL #erase the first column, which is unnecessary
 ```
 
-The time series is plotted to give a general feeling of the data. When looking at the data there are a lot of N/A which seems to mean that the company was not being traded at that moment yet. When looking at the data it is not obvious at which
+The data is ok, lots of missing values due to staggered start times for various companies introductions to trading.
+
+Below I attempted to add dates to the values, so that interesting days could be marked in future analysis, but was not able to figure out the proper way to go about this.
 
 ```{r}
 #looking at adding the dates as an extra column, find a way to skip the weekends
@@ -26,11 +28,47 @@ length(tW)
 #the above unfortunately does not work...which are the days this data is counted for? I counted for all weeks starting from the beginning and have 5211 values as compared to 5039
 ```
 
+Here the library missMDA is used. It does manage to return values, but unable to estimate any values for the number of parameters which should be retained. Here I have just input an arbitrary value, and have done testing with lower values as well which has lead to suspicious holes in the time series plot.
+```{r}
+library(missMDA)
+library(FactoMineR)
+#nbdim <- estim_ncpPCA(returns,scale = TRUE) # estimate the number of dimensions to impute, this only gives out a zero
+res.comp <- imputePCA(returns, ncp = 150, scale = TRUE)
+res.PCA <- PCA(res.comp[["completeObs"]])
+
+```
+
+Verify that the process looks somewhat stationary. It should be since the data is already given as normalized.
+
+I also check the plots for the values which have been given by missMDA.
+
+```{r}
+library(zoo)
+z<-read.zoo(returns)
+plot(z, screen = 1)
+plot(res.comp[["completeObs"]],type = "l")
+
+
+```
+This helps visualize the uncertainty in using the predicted values. Still computed using the 'random' value for the number of dimensions used above.
+
+```{r}
+mi <- MIPCA(returns, scale = TRUE, ncp = 150)
+plot(mi)
+```
+One way which the dependencies of a Gaussian, multivariate time series can be estimated is through using spectral analysis. The theory behind using this states that there is marginal independence between two time series(i and j) if the i and j component of the spectral density matrix is equal to 0. This theory also states that there is conditional independence given all other time series if the i and j components of the inverse of the spectral density matrix is also equal to 0. Below I do a rough analysis according to this spectral analysis method and attempt to find the marginal and conditional independences. 
+
+
+```{r}
+#returns_spectrum <- spectrum(returns)
+pcareturns_spectrum <- spectrum(res.comp[["completeObs"]])
+```
+continuation of the above
+
 ```{r}
 
 ```
 
-Add a new chunk by clicking the *Insert Chunk* button on the toolbar or by pressing *Ctrl+Alt+I*.
 
 
-When you save the notebook, an HTML file containing the code and output will be saved alongside it (click the *Preview* button or press *Ctrl+Shift+K* to preview the HTML file).
+
