@@ -1,0 +1,53 @@
+---
+title: "Daily Asset Returns Mixed Values Imputation"
+output: html_notebook
+---
+In this notebook I am looking at imputing the missing values of the Daily Asset Returns dataset.
+It involves the normalized time-series data for 250 French companies dating from 04.01.1988 to 21.12.2007. 
+Not all of these companies have been operating for this entire time series so there are many values missing.
+I will attempt to do the theoretical part of this project alongside the programming part, and will likely extend this notebook to include other interesting aspects of time-series analysis.
+
+The method followed is based on the Multiple Imputation method proposed by Honaker and KIng in their 2010 paper What to Do about Missing Values in Time-Series Cross-Section data.
+
+What multiple imputation does is to fill in the holes in the data set with multiple imputations using all existing knowledge as well as any prior knowledge. The expected value is estimated by the mean of the imputed values. This means that we also have an estimate of the uncertainty of our prediction in the model.
+
+The first thing to be done is to split the data into two seperate parts. One part has data and the other is missing data. I describe these as $$[X^{obs},X^{mis}]$$
+
+We also create a matrix M with the value 1 if there is data and value 0 else.
+The data we are imputing is assumed to be MAR(missing at random) which means that the missing data cannot be imputed by X^{mis} but is rather only dependent on the observed values X^{obs}. 
+It is assumed that the distribution is multivariate normal.
+```{r}
+returns = read.table("Returns250d.txt",header = TRUE)
+returns$blank <- NULL #erase the first column, which is unnecessary
+```
+
+
+
+```{r}
+require(Amelia)
+results.out <- amelia(returns[,2:100], parallel = c("multicore"))
+```
+
+```{r}
+results2.out <- amelia(returns[,101:175], parallel = c("multicore"))
+results3.out <- amelia(returns[,176:end], parallel = c("multicore"))
+```
+
+
+```{r}
+missmap(results.out)
+#missmap(results2.out)
+```
+
+```{r}
+results.out
+#results2.out <- amelia(returns, parallel = c("multicore"),empri = .01*nrow(returns))
+```
+
+
+
+Add a new chunk by clicking the *Insert Chunk* button on the toolbar or by pressing *Ctrl+Alt+I*.
+
+When you save the notebook, an HTML file containing the code and output will be saved alongside it (click the *Preview* button or press *Ctrl+Shift+K* to preview the HTML file).
+
+The preview shows you a rendered HTML copy of the contents of the editor. Consequently, unlike *Knit*, *Preview* does not run any R code chunks. Instead, the output of the chunk when it was last run in the editor is displayed.
